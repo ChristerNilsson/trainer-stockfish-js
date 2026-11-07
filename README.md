@@ -1,5 +1,7 @@
 ﻿# Stockfish mot människa
 
+[Try it!](https://christernilsson.github.io/trainer-stockfish-js/index.html)
+
 Starta med `npm install` (första gången) och `npm start`. Öppna sedan http://localhost:8080 i en modern webbläsare. Node.js 20 eller senare rekommenderas. Sidan behöver servern och kan inte öppnas direkt som file://.
 
 Välj din färg, antal noder och en FEN-position och tryck **Starta parti**. Klicka först på en egen pjäs och sedan på en markerad målruta. Vid bondeförvandling väljer du pjäs. Om motorn står på tur i den valda positionen gör den första draget automatiskt. Färg och FEN tillämpas när ett nytt parti startas; nodantalet kan ändras under partiet och används vid nästa sökning.
