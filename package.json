@@ -1,0 +1,1 @@
+{"name":"stockfish-mot-manniska","version":"1.0.0","private":true,"type":"module","scripts":{"start":"node server.js","build":"node scripts/build.mjs","test":"node test.mjs"},"dependencies":{"chess.js":"1.4.0","stockfish":"17.1.0"}}

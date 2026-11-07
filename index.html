@@ -1,0 +1,27 @@
+﻿<!doctype html>
+<html lang="sv"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1"><title>Stockfish · Spela schack</title><link rel="stylesheet" href="style.css"></head>
+<body>
+<header><div class="brand">♞ <span>STOCKFISH <small>/ SCHACKSTUDION</small></span></div><span class="engine-tag">17.1 · WebAssembly</span></header>
+<main><section class="play">
+<div class="heading"><div><p class="eyebrow">MÄNNISKA MOT MOTOR</p><h1>Ditt nästa drag.</h1></div><button id="flip" class="quiet">Vänd brädet ↻</button></div>
+<div class="player"><span class="avatar">♟</span><div><strong>Stockfish</strong><small id="engine-color">Svart</small></div><span id="activity">Laddar motor…</span></div>
+<div id="board" aria-label="Schackbräde"></div>
+<div class="player"><span class="avatar human">♙</span><div><strong>Du</strong><small id="human-color">Vit</small></div><span>Klicka på pjäs och målruta</span></div>
+<div id="status" role="status" aria-live="polite">Laddar Stockfish…</div>
+</section><aside>
+<section class="panel"><p class="eyebrow">SPELINSTÄLLNINGAR</p><h2>Ställ in ditt parti</h2><form id="settings">
+<label for="color">Din färg</label><select id="color"><option value="w">Vit</option><option value="b">Svart</option></select>
+<label for="nodes">Noder per motordrag</label><select id="nodes"><option value="10">10</option><option value="100">100</option><option value="1000">1k</option><option value="10000">10k</option><option value="100000">100k</option><option value="1000000" selected>1M</option></select>
+<p class="hint">Fler noder ger motorn mer tid att hitta ett starkt drag. Ändringen gäller nästa sökning.</p>
+<label for="fen">Startposition · FEN</label><textarea id="fen" rows="4" spellcheck="false" required></textarea>
+<div class="links"><button id="standard" type="button" class="quiet">Startställning</button><button id="example" type="button" class="quiet">Ladda andersson.fen</button></div>
+<button class="primary" type="submit">Starta parti <span>→</span></button><p id="error" role="alert"></p>
+</form></section>
+<section class="panel" aria-labelledby="engine-log-title"><h2 id="engine-log-title">Datorns senaste drag</h2><div id="engine-log" aria-live="polite"><p class="hint">Inget motordrag ännu.</p></div></section>
+<section class="panel"><div class="section-heading"><h2>Draglista</h2><span id="turn">Vit vid draget</span></div><div id="moves"></div></section>
+<details class="panel"><summary>Aktuell FEN</summary><textarea id="current-fen" rows="3" readonly aria-label="Aktuell FEN"></textarea></details>
+<p class="credits">All beräkning sker på din dator.<br><a href="https://github.com/nmrugg/stockfish.js">Stockfish.js · GPLv3 & källkod</a> · <a href="https://github.com/jhlywa/chess.js">chess.js · BSD-2-Clause</a><br>Pjäser: <a href="https://github.com/lichess-org/lila/tree/master/public/piece/cburnett">Cburnett</a> · Colin M. L. Burnett · GPLv2+</p>
+</aside></main>
+<dialog id="promotion"><h2>Välj förvandling</h2><p>Vilken pjäs ska bonden bli?</p><div class="promotion-options"></div></dialog>
+<script type="module" src="app.js"></script></body></html>
+
