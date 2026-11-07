@@ -6,7 +6,7 @@ const root = fileURLToPath(new URL('../', import.meta.url));
 const output = path.join(root, 'dist');
 const engine = 'node_modules/stockfish/src/stockfish-17.1-single-a496a04';
 const files = [
-  'index.html', 'app.js', 'style.css', 'andersson.fen', 'assets',
+  'index.html', 'app.js', 'engine-worker.js', 'style.css', 'andersson.fen', 'assets',
   'node_modules/chess.js/dist/esm/chess.js',
   'node_modules/chess.js/LICENSE',
   'node_modules/stockfish/Copying.txt',

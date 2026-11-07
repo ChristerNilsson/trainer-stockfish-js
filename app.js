@@ -13,6 +13,7 @@ let game = new Chess(), human = 'w', orientation = 'w', selected = null;
 let worker, ready = false, thinking = false, failed = false, generation = 0;
 let initialFen = DEFAULT_POSITION, uciMoves = [];
 let searchStats = {}, lastEngineMove = null;
+let downloadedBytes = 0;
 function renderEngineLog() {
   const log = $('engine-log');
   log.replaceChildren();
@@ -56,7 +57,7 @@ function status() {
   if (game.isInsufficientMaterial()) return 'Remi: otillräckligt material.';
   if (game.isDraw()) return 'Remi enligt 50-dragsregeln.';
   if (failed) return 'Motorn kunde inte laddas. Starta ett nytt parti för att försöka igen.';
-  if (!ready) return 'Laddar Stockfish (cirka 75 MB). Vänta ett ögonblick…';
+  if (!ready) return `Laddar Stockfish: ${(downloadedBytes / 1e6).toFixed(1)} MB hämtat (cirka 75 MB). Första starten kan ta någon minut.`;
   if (thinking) return 'Stockfish tänker…';
   return `${game.turn() === human ? 'Din tur' : 'Motorns tur'}${game.isCheck() ? ' – schack!' : '.'}`;
 }
@@ -141,6 +142,7 @@ function respond() {
 function startEngine() {
   worker?.terminate(); const token=++generation;
   ready=false;thinking=false;failed=false;
+  downloadedBytes=0;
   searchStats={};lastEngineMove=null;renderEngineLog();
   const timeout=setTimeout(()=>engineError('Motorn svarar inte. Prova att starta partiet igen.'),120000);
   function engineError(message) {
@@ -148,10 +150,20 @@ function startEngine() {
     clearTimeout(timeout);failed=true;ready=false;thinking=false;worker?.terminate();$('error').textContent=message;render();
   }
   try {
-    worker=new Worker('./node_modules/stockfish/src/stockfish-17.1-single-a496a04.js');
-    worker.onerror=()=>engineError('Kunde inte köra Stockfish. Öppna sidan via npm start i en modern webbläsare med WebAssembly.');
+    const wasmUrl = new URL('./node_modules/stockfish/src/stockfish-17.1-single-a496a04.wasm', location.href);
+    worker=new Worker(`./engine-worker.js#${encodeURIComponent(wasmUrl.href)}`);
+    worker.onerror=()=>engineError('Kunde inte köra Stockfish. Kontrollera anslutningen och använd en modern webbläsare med WebAssembly.');
     worker.onmessage=({data})=>{
       if(token!==generation)return;
+      if(data?.type==='download') {
+        downloadedBytes=data.bytes;
+        if(!ready) $('status').textContent=status();
+        return;
+      }
+      if(data?.type==='load-error') {
+        engineError(`Kunde inte hämta motorn: ${data.message}. Kontrollera anslutningen och att hela webbplatsen har publicerats.`);
+        return;
+      }
       for(const line of String(data).split('\n')) {
         if(line==='uciok') { worker.postMessage('setoption name Hash value 64');worker.postMessage('ucinewgame');worker.postMessage('isready'); }
         if(line==='readyok') {clearTimeout(timeout);ready=true;render();respond();}
